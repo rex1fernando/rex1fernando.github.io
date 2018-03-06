@@ -1,0 +1,306 @@
+/*
+ *                        ___
+ *                       /\_ \
+ *  _____     ___     ___\//\ \      __
+ * /\ '__`\  / __`\  / __`\\ \ \   /'__`\
+ * \ \ \_\ \/\ \_\ \/\ \_\ \\_\ \_/\  __/
+ *  \ \ ,__/\ \____/\ \____//\____\ \____\
+ *   \ \ \/  \/___/  \/___/ \/____/\/____/
+ *    \ \_\
+ *     \/_/
+ *
+ * Designed, built, and released under MIT license by @mdo. Learn more at
+ * https://github.com/poole/poole.
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Rubik+Mono+One');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Pontano Sans');
+@import url('https://fonts.googleapis.com/css?family=Lustria');
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Judson');
+
+
+/*
+ * Contents
+ *
+ * Body resets
+ * Custom type
+ * Messages
+ * Container
+ * Masthead
+ * Posts and pages
+ * Pagination
+ * Reverse layout
+ * Themes
+ #A2D5F2
+ #07689F
+ #FAFAFA
+ #FF7E67
+ 
+ #9DDCDC
+ #FFF4E1
+ #FFEBB7
+ #E67A7A
+ */
+
+
+/*
+ * Body resets
+ *
+ * Update the foundational and global aspects of the page.
+ */
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 228px;
+
+}
+
+/* line height: 24.8px */
+
+html {
+  /*font-family: "Courier New", sans-serif;*/
+  font-family: "Lato";
+  font-size: 20px;
+
+  line-height: 1.55em;
+}
+
+
+body {
+  color: #515151;
+  background-color: #fff;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+}
+
+/* No `:visited` state is required by default (browsers will use `a`) */
+a {
+  color: #A2D5F2;
+  text-decoration: none;
+}
+a strong {
+  color: inherit;
+}
+/* `:focus` is linked to `:hover` for basic accessibility */
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  color: #313131;
+  /*color: #07689F;*/
+  text-rendering: optimizeLegibility;
+  /*font-family: "Rubik Mono One", sans-serif;*/
+  font-family: "Work Sans";
+}
+h1 {
+  font-size: 2.25rem;
+  line-height: 3.49rem;
+  margin-top: 0rem;
+  margin-bottom: 1.55rem;
+
+}
+h2 {
+  font-size: 1.5rem;
+  line-height: 2.33rem;
+  margin-top: 3.1rem;
+  margin-bottom: 0.78rem;
+  
+}
+h3 {
+  font-size: 2rem;
+  line-height: 3.1rem;
+  margin-bottom: 1.55rem;
+}
+h4, h5, h6 {
+  font-size: 1rem;
+}
+
+/* Body text */
+p {
+  margin-top: 0;
+  margin-bottom: 0.78rem;
+}
+
+strong {
+  color: #303030;
+}
+
+
+/* Lists */
+ul, ol, dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-left: 0rem;
+}
+
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-bottom: .5rem;
+}
+
+/* Misc */
+hr {
+  position: relative;
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #fff;
+}
+
+abbr {
+  font-size: 85%;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+}
+abbr[title] {
+  cursor: help;
+  border-bottom: 1px dotted #e5e5e5;
+}
+
+
+/* Quotes */
+blockquote {
+  padding: .5rem 1rem;
+  margin: .8rem 0;
+  color: #7a7a7a;
+  border-left: .25rem solid #e5e5e5;
+}
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+@media (min-width: 30em) {
+  blockquote {
+    padding-right: 5rem;
+    padding-left: 1.25rem;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  border-radius: 1rem;
+}
+
+/* Tables */
+table {
+  margin-bottom: 1rem;
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: .25rem .5rem;
+  border: 1px solid #e5e5e5;
+}
+tbody tr:nth-child(odd) td,
+tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+
+
+/*
+ * Custom type
+ *
+ * Extend paragraphs with `.lead` for larger introductory text.
+ */
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+#container {
+  padding-top:    7.75rem;
+  padding-bottom: 7.75rem;
+
+  display: grid;
+  width: 56.73rem;
+  grid-template-columns: 16.75rem 36.88rem;
+  grid-gap: 3.1rem;
+  margin: 0 auto;
+}
+
+.content {
+  width: 33rem;
+  margin-top: 1.5rem;
+  margin-right: 3.88rem;
+}
+
+
+#portrait {
+  display: block;
+  /*margin-top: 0.55rem;*/
+  margin-top: -0.2rem;
+  top: 7.75
+  margin-right: 0rem;
+  max-width: 180px;
+  margin-left: 7.75rem;
+}
+
+
+#secret {
+  display: block;
+  margin: 0 auto;
+  max-width: 25px;
+}
+
+.paper_title {
+  display: block;
+  font-weight: normal;
+  /*font-family: "Montserrat", serif; */
+  font-size: 1rem;
+
+}
+.paper_authors {
+  display: inline;
+  font-weight: normal;
+
+}
+.paper_venue {
+  display: inline;
+  font-style: italic;
+  margin-left: 0.4rem;
+  color: #FF7E67;
+  font-weight: normal;
+
+}
+
+#email {
+  font-weight: bold;
+}
+#email a {
+  font-weight: normal;
+}
+
+li {
+  margin-bottom: 1.3rem;
+  font-weight: normal;
+  font-size: 0.9rem;
+
+}
+
+.sidebar hr {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-top: 1px solid #505050;
+  border-bottom: none;
+}
