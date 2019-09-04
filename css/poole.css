@@ -142,11 +142,11 @@ strong {
 
 
 /* Lists */
-ul, ol, dl {
+/*ul, ol, dl {
   margin-top: 0;
   margin-bottom: 1rem;
   padding-left: 0rem;
-}
+}*/
 
 dt {
   font-weight: bold;
@@ -359,7 +359,8 @@ tbody tr:nth-child(odd) th {
   display: block;
   font-weight: normal;
   /*font-family: "Montserrat", serif; */
-  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  /*font-size: 1rem;*/
 
 }
 .paper_authors {
