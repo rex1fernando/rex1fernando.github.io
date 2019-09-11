@@ -1,15 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Rubik+Mono+One');
 @import url('https://fonts.googleapis.com/css?family=Lato');
-@import url('https://fonts.googleapis.com/css?family=Pontano Sans');
-@import url('https://fonts.googleapis.com/css?family=Lustria');
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,500,700');
-@import url('https://fonts.googleapis.com/css?family=Judson');
 @import url('https://fonts.googleapis.com/css?family=Inconsolata');
-@import url('https://fonts.googleapis.com/css?family=Avenir');
-@import url('https://fonts.googleapis.com/css?family=Brown');
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-@import url('https://fonts.googleapis.com/css?family=Source+Serif+Pro');
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+@import url('https://fonts.googleapis.com/css?family=Karla');
 
 
 /*
@@ -60,10 +52,11 @@ body {
 
 html {
   font-family: "Lato";
-  /*font-family: "Source Serif Pro";*/
+  /*font-family: "Inconsolata";*/
   font-size: 20px;
 
   line-height: 1.55em;
+  vertical-align: baseline;
 
 }
 
@@ -74,10 +67,13 @@ body {
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 
-  /*
+  
+ /* 
   background-image: linear-gradient(#0ff 1px, transparent 1px);
   background-size: auto 0.775em;
   */
+ 
+  
   
   
   
@@ -104,32 +100,49 @@ h1, h2, h3, h4, h5, h6 {
   color: #313131;
   /*color: #07689F;*/
   text-rendering: optimizeLegibility;
-  /*font-family: "Rubik Mono One", sans-serif;*/
   font-family: "Work Sans";
-  /*font-family: "Source Sans Pro";*/
+  /*font-family: "Karla"*/
 }
 h1 {
   font-size: 1.8rem;
-  line-height: 3.1rem;
+  /*line-height: 3.1rem;*/
+  line-height: 2.325rem;
   margin-top: 0rem;
-  /*margin-bottom: 0.775rem;*/
-  margin-bottom: 0rem;
+  /*margin-bottom: 0rem;*/
+  margin-bottom: 0.775rem;
+  padding-bottom: 0rem;
   letter-spacing: -0.5px;
 }
 h2 {
   font-size: 1.25rem;
-  line-height: 2.33rem;
-  margin-top: 3.1rem;
-  margin-bottom: 0.775rem;
+  line-height: 1.55rem;
   margin-right: 10px;
-  border-bottom: 1px solid black;
-  
+  margin-bottom: 1.55rem;
 }
+
+
+
+h2:after {
+  content: '';
+  display: block;
+  width: 60px;
+  margin-top: 5px;
+  margin-bottom: 0.775rem;
+  border-bottom: 4px solid #000;
+  position: absolute;
+  z-index: 1;
+}
+
+
 h3 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   /*font-weight: bold;*/
-  line-height: 2.33rem;
-  margin-bottom: 0.5rem;
+  line-height: 1.55rem;
+
+  margin-bottom: 0.775rem;
+  margin-bottom: 0rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 h4, h5, h6 {
   font-size: 1rem;
@@ -178,8 +191,8 @@ img {
   max-width: 180px;
   margin-left: 7.75rem;
 }
-
 @media (max-width: 1071px) {
+
   #container {
     padding-top:    7.75rem;
     padding-bottom: 7.75rem;
@@ -200,7 +213,7 @@ img {
   }
 }
 
-@media (max-width: 868px) {
+@media (max-width: 930px) {
   #container {
     display: block;
     width: 33rem;
@@ -221,7 +234,7 @@ img {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   html {
     font-size: 18px;
   }
@@ -265,6 +278,20 @@ img {
     margin-top: 0rem;
     margin-left: 2.5rem;
   }
+
+  ol {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0rem;
+    max-width: 530px;
+  }
+
+  li {
+    margin-bottom: 0.775rem;
+    font-weight: normal;
+    font-size: 0.85rem;
+
+  }
 }
 
 
@@ -272,6 +299,18 @@ img {
   display: block;
   margin: 0 auto;
   max-width: 25px;
+}
+
+#research {
+  margin-top: 3.1rem;
+  padding-left: 1.55rem;
+  margin-left: -1.55rem;
+  padding-right: 1.55rem;
+  margin-right: -1.55rem;
+  background-color: #f9f9f9;
+  padding-top: 0.775rem;
+  padding-bottom: 0.775rem;
+
 }
 
 .paper_title {
@@ -304,12 +343,15 @@ img {
 }
 
 ol {
-  padding-left: 0;
-  max-width: 500px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0.8rem;
+  max-width: 530px;
 }
 
 li {
-  margin-bottom: 1.3rem;
+  padding-left: 0.5rem;
+  margin-bottom: 0.775rem;
   font-weight: normal;
   font-size: 0.85rem;
 
