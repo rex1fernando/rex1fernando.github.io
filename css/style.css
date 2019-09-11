@@ -163,35 +163,10 @@ img {
 }
 
 
-#container {
-  padding-top:    7.75rem;
-  padding-bottom: 7.75rem;
-
-  display: grid;
-  width: 56.73rem;
-  grid-template-columns: 16.75rem 36.88rem;
-  grid-gap: 3.1rem;
-  margin: 0 auto;
-}
 
 
 
-.content {
-  width: 33rem;
-  margin-top: 1.55rem;
-  margin-right: 3.88rem;
-}
 
-
-#portrait {
-  display: block;
-  /*margin-top: 0.55rem;*/
-  margin-top: -0.2rem;
-  margin-right: 0rem;
-  max-width: 180px;
-  margin-left: 7.75rem;
-}
-@media (max-width: 1071px) {
 
   #container {
     padding-top:    7.75rem;
@@ -206,14 +181,20 @@ img {
   
   #portrait {
     margin-left: 3.75rem;
+  display: block;
+  /*margin-top: 0.55rem;*/
+  margin-top: -0.2rem;
+  margin-right: 0rem;
+  max-width: 180px;
   }
   
   .content {
-    width: 25rem;
+  margin-top: 1.55rem;
+  margin-right: 3.88rem;
+    width: 27rem;
   }
-}
 
-@media (max-width: 930px) {
+@media (max-width: 1000px) {
   #container {
     display: block;
     width: 33rem;
@@ -223,7 +204,7 @@ img {
   }
   
   .content {
-    width: 25rem;
+    width: 27rem;
     margin-top: 2.0rem;
     margin-left: 3.88rem;
   }
@@ -240,14 +221,14 @@ img {
   }
   #container {
     display: block;
-    width: 28rem;
+    width: 33rem;
     padding-top: 5.49rem;
     padding-bottom: 5.49rem;
     margin: 0 auto;
   }
   
   .content {
-    width: 22rem;
+    width: 27rem;
     margin-left: 2.5rem;
   }
   
@@ -259,24 +240,24 @@ img {
 
 @media (max-width: 500px) {
   html {
-    font-size: 16px;
+    font-size: 14px;
   }
   #container {
     display: block;
     padding-top: 5.49rem;
     padding-bottom: 5.49rem;
     margin: 0 auto;
-    width: 100%;
+    width: 25rem;
   }
   
   .content {
     width: 19rem;
-    margin-left: 2.5rem;
+    margin-left: 2rem;
   }
   
   #portrait {
     margin-top: 0rem;
-    margin-left: 2.5rem;
+    margin-left: 2rem;
   }
 
   ol {
