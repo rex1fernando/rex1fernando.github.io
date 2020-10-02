@@ -314,6 +314,7 @@ img {
   margin-left: 0.4rem;
   color: #DF5E57;
   font-weight: normal;
+  white-space: nowrap;
 
 }
 
