@@ -296,6 +296,8 @@ img {
 }
 
 .paper_title {
+  color: #20B1B1;
+  text-decoration: none;
   display: block;
   font-weight: normal;
   /*font-family: "Montserrat", serif; */
