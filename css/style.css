@@ -141,7 +141,7 @@ h3 {
   line-height: 1.55rem;
 
   margin-bottom: 0.775rem;
-  margin-bottom: 0rem;
+  margin-bottom: 0.25rem;
   margin-top: 0;
   padding-top: 0;
 }
@@ -336,7 +336,7 @@ ol {
 
 li {
   padding-left: 0.5rem;
-  margin-bottom: 0.775rem;
+  margin-bottom: 1.25rem;
   font-weight: normal;
   font-size: 0.85rem;
 
