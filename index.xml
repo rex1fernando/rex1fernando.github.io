@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rex Fernando</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Rex Fernando</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Simulation-Extractability, Non-Malleability, SoK</title>
+      <link>http://localhost:1313/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</link>
+      <pubDate>Tue, 07 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</guid>
+      <description>These three concepts are related. Going to try to explore the relationship (with respect to non-interactive zero knowledge) in this note.&#xA;Simulation-extractability High-level: Assume we have some NIZK. An adversary, given access to a simulation oracle, produces a proof $\pi$ for a statement $x$. There should be an extractor that whenever $\pi$ is true, extracts a valid witness for $x$.&#xA;Realized my intuition doesn&amp;rsquo;t specify whether the oracle accepts false statements.</description>
+    </item>
+    <item>
+      <title>Simulation-Extractability, Non-Malleability, SoK</title>
+      <link>http://localhost:1313/ww_current/</link>
+      <pubDate>Tue, 07 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/ww_current/</guid>
+      <description>These three concepts are related. Going to try to explore the relationship (with respect to non-interactive zero knowledge) in this note.&#xA;Simulation-extractability High-level: Assume we have some NIZK. An adversary, given access to a simulation oracle, produces a proof $\pi$ for a statement $x$. There should be an extractor that whenever $\pi$ is true, extracts a valid witness for $x$.&#xA;Realized my intuition doesn&amp;rsquo;t specify whether the oracle accepts false statements.</description>
+    </item>
+    <item>
+      <title>Contact</title>
+      <link>http://localhost:1313/contact/</link>
+      <pubDate>Mon, 10 Jun 2024 18:55:02 -0700</pubDate>
+      <guid>http://localhost:1313/contact/</guid>
+      <description> rex1fernando@gmail.com github linkedin </description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 10 Jun 2024 18:42:44 -0700</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>I spent the last several years doing a PhD at UCLA and then a postdoc at Carnegie Mellon, where I learned about the theory of cryptography. Now, I am currenctly a research scientist at Aptos Labs, where I am learning about the practice of cryptography. It may or may not surprise you, but there is a huge gap between these two areas!&#xA;Right now this blog is quite new, and the posts are mostly unfinished.</description>
+    </item>
+  </channel>
+</rss>

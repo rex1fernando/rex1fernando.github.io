@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="The following times are all measured on a Google Cloud t2d-standard-4 machine. Note that the SHA256 compression function we are using in the Keyless circuit has:
+30328 constraints, and 30785 variables. These numbers were obtained by writing the following circom file in aptos-core/keyless/circuit/templates:
+pragma circom 2.1.3; include &#34;helpers/sha.circom&#34;; component main = Sha256compression(); and then running
+circom -l . -l ~/.nvm/versions/node/v21.6.1/lib/node_modules sha.circom --r1cs FFIASM Below, the time taken to do 24 MSMs using FFIASM (the elliptic curve library used by RapidSnark), with varying number of group elements.">  
+
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    }
+  };
+</script>
+
+<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  
+    
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+  theme: 'neutral',
+});
+</script>
+
+
+  
+
+  <title>
+    
+      Benchmarks Related to the Nova Folding Scheme.
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.bbd84655f1da4bb1764405251710a1464b71601420ad7d8631e6af75d6b9baa8c640a95b6e2d585bd30418f9d72cfb1459d8e6a442c8cc09ce6f08a1cbe03342.css" integrity="sha512-u9hGVfHaS7F2RAUlFxChRktxYBQgrX2GMeavdda5uqjGQKlbbi1YW9MEGPnXLPsUWdjmpELIzAnObwihy&#43;AzQg==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">..</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2024-06-13 00:00:00 &#43;0000 UTC">
+            2024-06-13
+        </time>
+    </p>
+
+    <h1>Benchmarks Related to the Nova Folding Scheme.</h1>
+
+    
+
+    <p>The following times are all measured on a Google Cloud
+<a href="https://gcloud-compute.com/t2d-standard-4.html">t2d-standard-4 machine</a>.
+Note that the SHA256 compression function we are using in the Keyless
+circuit has:</p>
+<ul>
+<li>30328 constraints, and</li>
+<li>30785 variables.</li>
+</ul>
+<p>These numbers were obtained by writing the following circom file in
+<code>aptos-core/keyless/circuit/templates</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>pragma circom 2.<span style="color:#a6e22e">1</span>.<span style="color:#a6e22e">3</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>include <span style="color:#e6db74">&#34;helpers/sha.circom&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>component main  <span style="color:#f92672">=</span> Sha256compression();
+</span></span></code></pre></div><p>and then running</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>circom -l . -l ~/.nvm/versions/node/v21.6.1/lib/node_modules sha.circom  --r1cs
+</span></span></code></pre></div><h2 id="ffiasm">FFIASM</h2>
+<p>Below, the time taken to do 24 MSMs using FFIASM (the elliptic curve
+library used by RapidSnark), with varying number of group elements. Here,
+the scalars are chosen &ldquo;uniformly&rdquo; (pseudorandomly) from the field.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"># Elements</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">20000</td>
+<td style="text-align:right">1000</td>
+</tr>
+<tr>
+<td style="text-align:right">30000</td>
+<td style="text-align:right">1300</td>
+</tr>
+<tr>
+<td style="text-align:right">40000</td>
+<td style="text-align:right">1900</td>
+</tr>
+</tbody>
+</table>
+<p>Now, the same time (24 MSMs using FFIASM), except that the scalars are
+<em>binary</em> field elements.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"># Elements</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">20000</td>
+<td style="text-align:right">20</td>
+</tr>
+<tr>
+<td style="text-align:right">30000</td>
+<td style="text-align:right">27.5</td>
+</tr>
+<tr>
+<td style="text-align:right">40000</td>
+<td style="text-align:right">40</td>
+</tr>
+<tr>
+<td style="text-align:right">50000</td>
+<td style="text-align:right">45</td>
+</tr>
+<tr>
+<td style="text-align:right">60000</td>
+<td style="text-align:right">53.5</td>
+</tr>
+<tr>
+<td style="text-align:right">70000</td>
+<td style="text-align:right">72</td>
+</tr>
+<tr>
+<td style="text-align:right">80000</td>
+<td style="text-align:right">80.5</td>
+</tr>
+<tr>
+<td style="text-align:right">90000</td>
+<td style="text-align:right">85</td>
+</tr>
+</tbody>
+</table>
+<p>Both tables are relevant for Nova. At each step of the IVC, during folding,
+the prover will compute a Pedersen commitment for the <em>input + witness</em> of
+the next step, which will in our case be mostly binary scalars. That is,
+the Pedersen commitment is for a vector of size equal to the number of
+<em>variables</em> in the R1CS system. In addition, it will compute a Pedersen
+commitment of size equal to the number of <em>constraints</em> in the R1CS system,
+where the scalars are random and large. What these two tables mean, then,
+is that Nova should perform much better over R1CS systems with less
+constraints and more variables (assuming the variables take small values)
+than it does for R1CS instances with more constraints and less variables.</p>
+<h2 id="comparing-with-arkworks">Comparing with Arkworks</h2>
+<p>For reference, below are tables with the same two experiments (24 MSMs of
+the specified number of group elements), except using Arkworks instead of
+FFIASM. Again, starting with scalars chosen from the entire field:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"># Elements</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">20000</td>
+<td style="text-align:right">1300</td>
+</tr>
+<tr>
+<td style="text-align:right">30000</td>
+<td style="text-align:right">1900</td>
+</tr>
+<tr>
+<td style="text-align:right">40000</td>
+<td style="text-align:right">2250</td>
+</tr>
+</tbody>
+</table>
+<p>And now with binary scalars:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right"># Elements</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">20000</td>
+<td style="text-align:right">300</td>
+</tr>
+<tr>
+<td style="text-align:right">30000</td>
+<td style="text-align:right">433</td>
+</tr>
+<tr>
+<td style="text-align:right">40000</td>
+<td style="text-align:right">519</td>
+</tr>
+<tr>
+<td style="text-align:right">50000</td>
+<td style="text-align:right">826</td>
+</tr>
+<tr>
+<td style="text-align:right">60000</td>
+<td style="text-align:right">960</td>
+</tr>
+<tr>
+<td style="text-align:right">70000</td>
+<td style="text-align:right">1078</td>
+</tr>
+<tr>
+<td style="text-align:right">80000</td>
+<td style="text-align:right">1197</td>
+</tr>
+<tr>
+<td style="text-align:right">90000</td>
+<td style="text-align:right">1238</td>
+</tr>
+</tbody>
+</table>
+<p>It is surprising to me that the experiments with large scalars yield
+results that are very similar to those using FFIASM, whereas the
+experiments with binary scalars are much slower.</p>
+<h2 id="groth16-time-for-our-current-circuit">Groth16 time for our current circuit</h2>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multiexp A</td>
+<td style="text-align:right">276</td>
+</tr>
+<tr>
+<td>Multiexp B1</td>
+<td style="text-align:right">248</td>
+</tr>
+<tr>
+<td>Multiexp B2</td>
+<td style="text-align:right">885</td>
+</tr>
+<tr>
+<td>Multiexp C</td>
+<td style="text-align:right">366</td>
+</tr>
+<tr>
+<td>Calculating C time</td>
+<td style="text-align:right">18</td>
+</tr>
+<tr>
+<td>iFFT A time</td>
+<td style="text-align:right">242</td>
+</tr>
+<tr>
+<td>Shift A time</td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td>FFT A time</td>
+<td style="text-align:right">237</td>
+</tr>
+<tr>
+<td>iFFT B time</td>
+<td style="text-align:right">240</td>
+</tr>
+<tr>
+<td>Shift B time</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td>FFT B time</td>
+<td style="text-align:right">237</td>
+</tr>
+<tr>
+<td>iFFT C time</td>
+<td style="text-align:right">239</td>
+</tr>
+<tr>
+<td>Shift C time</td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td>FFT C time</td>
+<td style="text-align:right">238</td>
+</tr>
+<tr>
+<td>ABC time</td>
+<td style="text-align:right">21</td>
+</tr>
+<tr>
+<td>Multiexp H time</td>
+<td style="text-align:right">2785</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align:right">6209</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Constraints: 1376867</li>
+<li>Wires: 1343588</li>
+</ul>
+<h2 id="sonobe">Sonobe</h2>
+<p>Their example uses successive applications of the entire SHA2 instead of
+just the compression function. Circuit size is 45k without Nova checks.
+With Nova, the circuit size is around 90k.</p>
+<h1 id="novamova-folding-time-comparison">Nova/Mova folding time comparison</h1>
+<p>Following are times for error term commitment and for total folding
+computation, for both Nova and Mova. This does not count the time taken to
+commit to the witness. The matrix sizes are $2^{15}$ by $2^{15}$, which is
+approximately the size of the SHA verification circuit.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th style="text-align:right">Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nova</strong></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>Error term commitment</td>
+<td style="text-align:right">79.1</td>
+</tr>
+<tr>
+<td>Total</td>
+<td style="text-align:right">99.45</td>
+</tr>
+<tr>
+<td><strong>Mova</strong></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>Error term &ldquo;commitment&rdquo;</td>
+<td style="text-align:right">1.4</td>
+</tr>
+<tr>
+<td>Total</td>
+<td style="text-align:right">26.85</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+
+                <hr>
+
+                <p>© 2024 Rex Fernando · Website <a href="">code</a> based on <a href="">Hugo</a>, with theme <a href="">nostyleplease</a></p>
+
+            </div>
+        </main>
+    </body></html>
