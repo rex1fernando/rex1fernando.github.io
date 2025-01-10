@@ -2,37 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/nova_writeup_90cafe85/</loc>
-    <lastmod>2024-09-17T00:00:00+00:00</lastmod>
+    <loc>https://example.org/posts/</loc>
+    <lastmod>2025-01-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-09-17T00:00:00+00:00</lastmod>
+    <loc>https://example.org/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</loc>
+    <lastmod>2025-01-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/explanation_of_product_check_and_plookup_752aa888/</loc>
-    <lastmod>2024-09-10T00:00:00+00:00</lastmod>
+    <loc>https://example.org/ww_current/</loc>
+    <lastmod>2025-01-07T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/groth16_writeup_1f2e9d53/</loc>
-    <lastmod>2024-06-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/benchmarks_related_to_the_nova_folding_scheme__c4ba3c62/</loc>
-    <lastmod>2024-06-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/contact/</loc>
+    <loc>https://example.org/contact/</loc>
     <lastmod>2024-06-10T18:55:02-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://example.org/about/</loc>
     <lastmod>2024-06-10T18:42:44-07:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/test/</loc>
-    <lastmod>2024-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://example.org/</loc>
     <lastmod>2022-08-25T21:30:04+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://example.org/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-  </url><url>
-    <loc>http://localhost:1313/ww_current/</loc>
+    <loc>https://example.org/tags/</loc>
   </url>
 </urlset>

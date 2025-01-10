@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Rex Fernando</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://example.org/posts/</link>
     <description>Recent content in Posts on Rex Fernando</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 07 Jan 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Simulation-Extractability, Non-Malleability, SoK</title>
-      <link>http://localhost:1313/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</link>
+      <link>https://example.org/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</link>
       <pubDate>Tue, 07 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</guid>
+      <guid>https://example.org/posts/simulation-extractability__non-malleability__sok_5e8d42b6/</guid>
       <description>These three concepts are related. Going to try to explore the relationship (with respect to non-interactive zero knowledge) in this note.&#xA;Simulation-extractability High-level: Assume we have some NIZK. An adversary, given access to a simulation oracle, produces a proof $\pi$ for a statement $x$. There should be an extractor that whenever $\pi$ is true, extracts a valid witness for $x$.&#xA;Realized my intuition doesn&amp;rsquo;t specify whether the oracle accepts false statements.</description>
     </item>
   </channel>
