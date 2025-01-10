@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="Cool properties Proof is only 3 group elements Verification time is small Scheme is very simple; full description can fit on an index card! Encoding the Computation We work with languages of the form $(U, V, W) \in (\mathbb{F}^{n \times m})^3$, where $x$ is an instance of the language iff there exists a $a = (x,w)$ such that $Ua \circ Va = Wa$, where $\circ$ is the hadamard product. In other words, for all $i\in [n]$, $u_i a \cdot v_i a = w_i a$, for rows $u_i, v_i$ and $w_i$ of $U, V$ and $W$, respectively.">  
+
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    }
+  };
+</script>
+
+<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  
+    
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+  theme: 'neutral',
+});
+</script>
+
+
+  
+
+  <title>
+    
+      Groth16 Writeup
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.bbd84655f1da4bb1764405251710a1464b71601420ad7d8631e6af75d6b9baa8c640a95b6e2d585bd30418f9d72cfb1459d8e6a442c8cc09ce6f08a1cbe03342.css" integrity="sha512-u9hGVfHaS7F2RAUlFxChRktxYBQgrX2GMeavdda5uqjGQKlbbi1YW9MEGPnXLPsUWdjmpELIzAnObwihy&#43;AzQg==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">..</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2024-06-14 00:00:00 &#43;0000 UTC">
+            2024-06-14
+        </time>
+    </p>
+
+    <h1>Groth16 Writeup</h1>
+
+    
+
+    <h2 id="cool-properties">Cool properties</h2>
+<ul>
+<li>Proof is only 3 group elements</li>
+<li>Verification time is small</li>
+<li>Scheme is very simple; full description can fit on an index card!</li>
+</ul>
+<h2 id="encoding-the-computation">Encoding the Computation</h2>
+<p>We work with languages of the form $(U, V, W) \in (\mathbb{F}^{n \times m})^3$, where $x$ is an instance of
+the language iff there exists a $a = (x,w)$ such that $Ua \circ Va = Wa$,
+where $\circ$ is the hadamard product. In other words, for all $i\in [n]$, $u_i
+a \cdot v_i a = w_i a$, for rows $u_i, v_i$ and $w_i$ of $U, V$ and $W$,
+respectively.</p>
+<p>Consider polynomials $\{ u_j(X) \}_j$, $\{ v_j(X) \}_j$, and $\{ w_j(X) \}_j$,
+which encode the columns of the three matrices at the set $\{ \omega,
+\omega^2, \dots, \omega^{n-1}, 1\}$, such that $u_j(\omega^i) = u_{i,j}$,
+and so on. Notice that if $Ua \circ Va = Wz$, then it holds that</p>
+$$\bigl( \sum_{j \in [m]} a_j u_j(X) \bigr)\bigl( \sum_{j \in [m]} a_j v_j(X) \bigr) - \sum_{j \in [m]} a_j w_j(X) $$
+<p>is zero at all points $\{ \omega, \omega^2, \dots, \omega^{n-1}, 1\}$. In
+other words,</p>
+$$\bigl( \sum_{j \in [m]} a_j u_j(X) \bigr)\bigl( \sum_{j \in [m]} a_j v_j(X) \bigr) - \sum_{j \in [m]} a_j w_j(X) = h(X) \cdot q(X),$$
+<p>where $h(X)$ is the minimal polynomial that has roots $\{ \omega, \omega^2,
+\dots, \omega^{n-1}, 1\}$. (Assuming $\omega$ is the $n$-th root of unity, $h(X) = X^n - 1$.</p>
+<p>Because of this, an alternate way to formulate the same family of languages
+is by giving  $(\{ u_j(X) \}_j, \{ v_j(X) \}_j, \{ w_j(X) \}_j)$, and saying
+$x$ satisfies the language iff there exists a $a = (x,w)$ and a $q(X)$ such
+that the equality above holds.</p>
+<h2 id="elliptic-curve-groups">Elliptic Curve Groups</h2>
+<p>Going to use an &ldquo;idealized&rdquo; model here. That is, we assume we have three
+groups $\newcommand{\G}{\mathbb{G}}\G_1$, $\G_2$, and $\G_T$. You can
+&ldquo;encode&rdquo; a field element $x$ in any of the three groups, which we will
+denote as $[x]_1$, $[x]_2$, or $[x]_T$. These elements support addition
+within one of the groups, scalar multiplication, and pairing: $[x]_1 \cdot
+[y]_2 = [xy]_T$.</p>
+<p>In terms of security, we will assume the group elements are opaque. That
+is, knowing an encoding $[x]_1$ allows you to test equality with another
+arbitrary encoding: $[x]_1 \stackrel{?}{=} [y]_1$, but beyond that does not
+reveal anything about the encoded value $x$.</p>
+<h2 id="scheme">Scheme</h2>
+<h3 id="non-zk-version">Non-ZK version</h3>
+<h4 id="setup">Setup:</h4>
+$$[1]_1, [\tau]_1, \dots, [\tau^n]_1$$
+$$[\alpha]_1, [\beta]_1$$
+$$[\gamma]_2, [\delta]_2$$
+<p>
+[to fill in as we go]</p>
+<h4 id="what-does-prover-need-to-send-to-the-verifier">What does prover need to send to the verifier?</h4>
+$$ A = \sum_{i \in [k]} a_i  [u_i(\tau)]_1 + [\alpha]_1 $$
+$$ B = \sum_{i \in [k]} a_i [v_i(\tau)]_1 + [\beta]_1 $$
+$$ C = \sum_{i = \ell+1}^k a_i [(w_i(\tau) + \alpha v_i(\tau) + \beta a_i(\tau))\delta^{-1}]_1
+     + [h(\tau)t(\tau) \delta^{-1}]_1
+$$
+<h2 id="scratch">Scratch</h2>
+<p>Can you do MMORPG trick in reverse? I.e., weight <em>public</em> input C terms
+w/ $\delta^{-1}$, and don&rsquo;t weight <em>private</em> input C terms??</p>
+<p>Imagine no $\delta$ or $\gamma$. Want to show trivial satisfaction of
+verification equality.</p>
+$$ A = [\alpha + 1]_1$$
+$$ B = [\beta + 2]_1$$
+$$ C = [\alpha + \beta + 1]_1$$
+<p><strong>V:</strong> check that
+</p>
+$$ A \cdot B \stackrel{?}{=} [\alpha]_1 \cdot [\beta]_2 + C \cdot [1]_2 $$
+<p>This is true even though $A$, $B$ and $C$ contain no information about the instance.</p>
+<span style="color: red">This is actually not true I think; basically this is
+a (rerandomized) proof of an all-zeros statement, which satisfies any R1CS
+instance assuming there are no public inputs. Note that even in the
+original Groth16 construction, the honest prover includes multiples of 
+$\alpha$ and $\beta$ in $C$, in order to rerandomize the proof to get ZK.</span>
+
+<span style="color: red">I think the way to fix this is to modify
+the scheme so that the statement is $Ua \circ Va = 1 + Wa$, so that the trivial all-zeros witness is no longer valid.
+the verifier can then check whether $A \cdot B = 1 + \alpha \cdot
+\beta + C \cdot 1$. Can still construct an accepting proof w/o
+a corresponding accepting witness. ("True" Groth16 can also be modified in
+this way to support "affine" R1CS, and is actually sound.)</span>
+
+<h3 id="actual-argument-against-inverse-mmorpg">Actual argument against inverse-MMORPG</h3>
+<p>Now imagine inverse-MMORPG. That is, imagine the public input terms in the CRS are $\gamma$-weighted,
+but the private-input terms in the CRS are unweighted.</p>
+<p>Imagine an R1CS relation
+</p>
+$$U = V = \begin{pmatrix}0 & 0\end{pmatrix}, 
+W = \begin{pmatrix}1 & 0\end{pmatrix}$$
+<p>
+Notice that
+</p>
+$$w_1(\tau) + \alpha v_1(\tau) + \beta u_1(\tau) = w_1(\tau). $$
+<p>
+Set the first input to be public and the second input to be private.</p>
+<p>Let&rsquo;s say the verifier wants to set public input
+$x = 1$. The verifier then checks
+</p>
+$$\begin{align*}
+A \cdot B &= [\alpha]_1 \cdot [\beta]_2 +
+[ (w_1(\tau) + \alpha v_1(\tau) + \beta u_1(\tau))\gamma^{-1}]_1
+)\cdot [\gamma]_2 +
+C \cdot [1]_2 \\
+&= [\alpha]_1 \cdot [\beta]_2 +
+[ c_1(\tau)\gamma^{-1}]_1
+)\cdot [\gamma]_2 +
+C \cdot [1]_2.
+\end{align*}
+$$
+<p>
+Note that with public input $x = 1$, the R1CS instance is unsatisfiable. So
+the prover should not be able to find an $(A, B, C)$ such that the
+verifier equation holds.</p>
+<p>We show that this is not the case.
+Set
+</p>
+$$ A = [\alpha]_1$$
+$$ B = [\beta]_2$$
+$$ C = [- c_1(\tau)]_1$$
+<p>
+where $C$ is computed using the powers of $\tau$ in the setup, along with
+the (public) definition of $(U, V, W)$.</p>
+<p>Since $C$ cancels out the public input term, the verifier check holds. This
+contradicts soundness.</p>
+
+</article>
+
+
+                <hr>
+
+                <p>© 2024 Rex Fernando · Website <a href="">code</a> based on <a href="">Hugo</a>, with theme <a href="">nostyleplease</a></p>
+
+            </div>
+        </main>
+    </body></html>

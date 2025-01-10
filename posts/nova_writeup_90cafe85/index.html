@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="Folding scheme: A folding scheme is given with respect to some family of NP relations $\newcommand{\R}{\mathcal{R}}\R$. The high-level idea, given a choice of $R \in \R$ is that there are two parties, the prover and the verifier. The prover has statements $x_1$ and $x_2$, along with corresponding witnesses $w_1$ and $w_2$. The verifier also knows $x_1$ and $x_2$. A folding scheme is a verifiable procedure that the prover can compute which combines the two statements $x_1$ and $x_2$ into a new statement $x&#39;$ of the same size.">  
+
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    }
+  };
+</script>
+
+<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  
+    
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+  theme: 'neutral',
+});
+</script>
+
+
+  
+
+  <title>
+    
+      Nova Writeup
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.bbd84655f1da4bb1764405251710a1464b71601420ad7d8631e6af75d6b9baa8c640a95b6e2d585bd30418f9d72cfb1459d8e6a442c8cc09ce6f08a1cbe03342.css" integrity="sha512-u9hGVfHaS7F2RAUlFxChRktxYBQgrX2GMeavdda5uqjGQKlbbi1YW9MEGPnXLPsUWdjmpELIzAnObwihy&#43;AzQg==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">..</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2024-09-17 00:00:00 &#43;0000 UTC">
+            2024-09-17
+        </time>
+    </p>
+
+    <h1>Nova Writeup</h1>
+
+    
+
+    <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h2 id="folding-scheme">Folding scheme:</h2>
+<p>A folding scheme is given with respect to some family of NP relations
+$\newcommand{\R}{\mathcal{R}}\R$. The high-level idea, given a choice of $R
+\in \R$ is that there are two parties, the prover and the verifier. The
+prover has statements $x_1$ and $x_2$, along with corresponding witnesses
+$w_1$ and $w_2$. The verifier also knows $x_1$ and $x_2$. A folding scheme
+is a <em>verifiable procedure</em> that the prover can compute which combines the
+two statements $x_1$ and $x_2$ into a new statement $x'$ <strong>of the same
+size.</strong> It also combines the two witnesses $w_1$ and $w_2$ into a new
+witness $w'$ of the same size. We want two properties: (1) if $(x_i, w_i)
+\in R$ for $i \in \{1,2\}$, then $(x', w') \in R$, and (2) if at least one
+$(x_i, w_i) \notin R$, then with overwhelming probability there is no $w'$
+where $(x', w') \in R$. (We actually want a &ldquo;knowledge soundness&rdquo; version
+of this property, but I will skip talking about this formally.)</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>When we say that folding is a <em>verifiable procedure</em>, we mean that the prover
+should additionally be able to compute some succinct proof $\tau$ such that the verifier,
+given $x_1, x_2, x', \tau$, can check that $x'$ was derived from an honest folding computation.</p>
+<h3 id="the-algorithms">The algorithms</h3>
+<p>More formally, a folding scheme consists of the following two algorithms,
+parameterized by some relation $R \in \R$:</p>
+<ul>
+<li>$\newcommand{\Fold}{\mathsf{Fold}}\Fold_R(x_1, w_1, x_2, w_2) \rightarrow (x', w', \tau)$</li>
+<li>$\newcommand{\VerifyFold}{\mathsf{VerifyFold}}\VerifyFold_R(x_1, x_2, x', \tau) \rightarrow 0 \text{ or } 1$</li>
+</ul>
+<p><strong>In practice,</strong> all known folding schemes (that I know of) start with an interactive
+protocol between the prover and the verifier, and then use the Fiat-Shamir
+transform to yield a set of algorithms following the syntax above. Folding
+schemes usually have a trusted setup phase, but I will ignore this for the
+next section.</p>
+<h3 id="why-are-folding-schemes-useful">Why are folding schemes useful?</h3>
+<p>At first glance, it might seem unclear how a folding scheme would be
+useful. Assume you have some relation $R$ with corresponding language
+$L_R$. If you want to convince someone that $x_1$ and $x_2$ are both in
+$L_R$, the folded statement and witness $x'$ and $w'$ don&rsquo;t seem
+immediately to help. This is because <em><span style="color: #be03fc">a folded statement $x'$ does not
+(necessarily) reveal anything about the statements that were folded to
+create it.</span>
+</em> Even if you also have the proof $\tau$ of correct folding, you
+still need $x_1$ and $x_2$ to use $\VerifyFold_R$.</p>
+<p>The original goal of studying folding schemes was to get
+<em>incrementally-verifiable computation (IVC)</em>. Our goal is different: we
+want to reduce the number of constraints in our SHA circuit. But it turns
+out that the way that we will use folding will be almost identical to how
+it is used to get IVC. So I will now explain what IVC is, and (at a high level) how to use
+folding to get IVC.</p>
+<p>Assume we have a long-running (usually
+non-deterministic) computation</p>
+$$
+\newcommand{\st}{\mathsf{st}}
+\begin{matrix}
+ &  & y_1 & &  & &y_2\\\
+ &  & \downarrow & &  & &\downarrow \\\
+\st_0 &\rightarrow  & \fbox{$f$}  & \rightarrow  & \st_1
+& \rightarrow & \fbox{$f$} & \rightarrow \cdots \rightarrow  & \st_n \\\
+\end{matrix}
+$$
+<p>which involves repeated application of some function $f$, starting with
+some state $\st_0$, and where each application of $f$ takes some
+auxiliary input $y_i$. IVC takes such a computation and produces
+a <em>verifiable</em> version of the computation</p>
+$$
+\begin{matrix}
+ &  & y_1 & &  & &y_2\\\
+ &  & \downarrow & &  & &\downarrow \\\
+\st_0 &\rightarrow  & \fbox{$f^*$}  & \rightarrow  & \st_1,
+\pi_1
+& \rightarrow & \fbox{$f^*$} & \rightarrow \cdots \rightarrow  & \st_n, \pi_n \\\
+\end{matrix}
+$$
+<p>with an augmented $f^*$. At each step $i$, this augmented function produces
+both the state $\st_i$ and a proof $\pi_i$ of correct computation <em>of all
+steps up to $i$.</em> That is $\pi_i$ proves knowledge of $y_1, \dots,
+y_i$ corresponding to an honest sequence of invocations of $f$ starting
+with $\st_0$ and ending at $\st_i$. For the IVC to be
+nontrivial, it should be the case that each $\pi_i$ is <em>succinct</em>, or in
+other words has size independent of the number of steps $i$, and in
+addition that the running time of $f^*$ also is independent of $i$.</p>
+<h3 id="getting-ivc-from-a-folding-scheme-the-naive-way">Getting &ldquo;IVC&rdquo; from a folding scheme: the naive way</h3>
+<p>Let $R$ be the relation over statements of the form
+$x_i = (\st_{i-1}, \st_i)$ and witnesses of the form $w_i = y_i$,
+where $(x_i, w_i) \in R$ iff $f(\st_{i-1}, y_i) = \st_i$. Let&rsquo;s first
+consider a naive strategy for getting IVC from a folding scheme:
+successively fold the current statement with a &ldquo;running&rdquo; folded statement,
+like the drawing below illustrates. I.e., given $f$, we can define $f^*$ as
+follows. Here, $f^*$ takes as input the previous state $\st_{i-1}$, the
+auxiliary input $y_i$, just like $f$. In addition, it takes the &ldquo;running&rdquo; folded statement $x_{1\rightarrow
+i-1}$, which is a folding of all statements $x_j = (\st_{j-1}, \st_j)$ for
+$j \in [i-1]$, along with the corresponding folded witness $w_{1\rightarrow (i-1)}$.</p>
+<blockquote>
+<p>$f^{*}(\st_{i-1}, \pi_{i-1}, y_i):$</p>
+<ol>
+<li>Parse $\pi_{i-1} = (x_{1\rightarrow (i-1)}, w_{1 \rightarrow (i-1)}, \dots)$.</li>
+<li>Compute $\st_i \leftarrow f(\st_{i-1}, y_i)$.
+Set $x_i = (\st_{i-1}, \st_i)$ and $w_i = y_i$.</li>
+<li>Compute $$(x_{1 \rightarrow i}, w_{1 \rightarrow i}, \tau_{1 \rightarrow i}) \leftarrow \Fold_R(x_{1\rightarrow (i-1)}, w_{1\rightarrow (i-1)}, x_i, w_i).$$</li>
+<li>Set $\pi_i = (x_{1 \rightarrow i}, w_{1 \rightarrow i}, \tau_{1 \rightarrow i})$, and
+Output $(\st_i, \pi_i)$.</li>
+</ol>
+</blockquote>
+<p>The drawing below illustrates this process defined by $f^*$.</p>
+<p><img src="/nova/naive_ivc.png" alt="Naive IVC"></p>
+<p>If you were paying attention up til now, you might realize that this isn&rsquo;t
+a valid IVC. That is, given an output
+$(\st_i, \pi_i = (x_{1 \rightarrow i}, w_{1 \rightarrow i}, \tau_{1 \rightarrow i}))$,
+it is not possible to verify using just $\pi_i$ that a sequence of honest
+invocations of $f$ resulted in $\st_i$. This is because <em><span style="color: #be03fc">as mentioned before, the folded statement $x_{1 \rightarrow i}$ does not reveal anything
+about the statements that were folded to create it.</span>
+</em></p>
+<p>To understand this better, let&rsquo;s write out what we would need to verify an
+honest sequence of computation ending in $\st_i$. We want some procedure
+$\newcommand{\VerifyIVC}{\mathsf{VerifyIVC}}\VerifyIVC$ which the IVC
+verifier can run to do this. $\VerifyIVC$ is parameterized by the state
+transition function $f$ (and, implicitly, by the relation $R$ above which
+also depends on $f$). It takes as input the latest $\st_i$ and proof
+$\pi_i$ which was output from $f^*$. In addition, $\VerifyIVC$ takes the
+vector $\vec \st$ of all intermediate states, vectors $\vec x$ and $\vec
+\tau$ of the intermediate folded statements and proofs, and finally the
+folded witness $w_{1 \rightarrow  i}$. It then checks the final folded
+statement $x_{1 \rightarrow i}$ is in $R$ using the folded witness $w_{1 \rightarrow  i}$, and <em>in addition</em> checks that
+$x_{1 \rightarrow i}$ is the result of folding a sequence of statements $(\st_0, \st_1), (\st_1, \st_2), \dots,
+   (\st_{i-1}, \st_{i})$. Pseudocode is below.</p>
+<blockquote>
+<p>$\VerifyIVC_f(\st_i, \pi_i, \vec \st, \vec x, \vec \tau, w_{1 \rightarrow i}):$</p>
+<ol>
+<li>Parse $\pi_i = (x_{1 \rightarrow i}, w_{1 \rightarrow i}, \tau_{1 \rightarrow i})$.</li>
+<li>Parse
+$\vec \st = [\st_0, \dots, \st_{i-1}]$.</li>
+<li>Parse
+$\vec x = [x_{1 \rightarrow 2}, \dots, x_{1 \rightarrow (i-1)}]$.</li>
+<li>Parse
+$\vec \tau = [\tau_{1 \rightarrow 2}, \dots, \tau_{1 \rightarrow (i-1)}]$.</li>
+<li>Set $x_{1 \rightarrow 1} = (\st_0, \st_1)$.</li>
+<li>For $j \in [2, \dots, i]$:
+<ul>
+<li>Set $x_j = (\st_{j-1}, \st_j)$.</li>
+<li>If $\VerifyFold_R(x_{1 \rightarrow j-1}, x_j, x_{1 \rightarrow j}, \tau_{1 \rightarrow j}) = 0$,
+then return $0$.</li>
+</ul>
+</li>
+<li>If $(x_{1 \rightarrow i}, w_{1 \rightarrow i}) \notin R$, then return
+0.</li>
+<li>Return 1.</li>
+</ol>
+</blockquote>
+<p>Note that in order to make this satisfy the IVC scheme syntax, the proof
+$\pi_i$ would need to be modified to include the vectors $\vec \st, \vec x,
+\vec \tau,$ and the final folded witness $w_{1 \rightarrow i}$. This would
+mean the succinctness property of IVC is not satisfied, since the size of
+the vectors $\vec \st, \vec x,$ and $\vec \tau$ grow linearly with the
+number of rounds $i$ of the computation. On the other hand, depending on
+$f$, this is still potentially a non-trivial improvement in terms of
+verification time as opposed to simply verifying the computation directly.
+Note that $\VerifyIVC_f$ does not need any of the auxiliary inputs $y_i$.
+If $y_i$ is very large compared to $\st_i$, then this could potentially
+yield a much faster verification time.</p>
+<h3 id="getting-ivc-from-a-folding-scheme-using-recursion">Getting IVC from a folding scheme: using recursion</h3>
+<h4 id="the-intuition">The Intuition</h4>
+<p>Let&rsquo;s talk about how to get a true, succinct IVC scheme from folding.
+Recall that the problem is the linear-sized vectors $\vec \st, \vec x,$ and
+$\vec \tau$ which must be included as part of the proof $\pi_i$ of honest
+computation up to step $i$. These vectors allow the verifier to check that
+(1) $x_{1 \rightarrow i}$ is the result of an honest sequence of foldings,
+and (2) the folded statements prove a sequence of honest applications of
+$f$ on a consistent sequence of states.</p>
+<p>To set this up, we are going to make
+a change to $\pi_i$: instead of containing a single folded statement for all steps
+up to $i$, it is going to contain two statements and witnesses: $(x_i,
+w_i)$ which encodes the last step of the computation, and a folded
+$(x_{1\rightarrow (i-1)}, w_{1 \rightarrow (i-1)})$ which encodes all previous
+steps up to $i-1$. The high-level idea to get succinctness, then, is to change the relation
+$R$ so that the  <em><span style="color: #be03fc">the last statement $x_i$ contains information about what statements were folded to
+create $x_{1 \rightarrow (i-1)}$.</span>
+</em>
+Specifically, we want $x_i$ to claim that  $x_{1 \rightarrow (i-1)}$ is an honest
+folding (i.e., $R^*$ encodes the algorithm $\VerifyFold$) and that the last
+folded statement ends with
+$\st_{i-1}$. Assume this modified relation is $R^*$.
+Then, by verifying
+$(x_i, w_i) \in R^*$, we verify that $x_{1 \rightarrow (i-1)}$ is
+&ldquo;well-formed&rdquo;, and then by verifying
+$(x_{1\rightarrow (i-1)}, w_{1 \rightarrow (i-1)}) \in R^*$, we recursively
+verify all the previous steps.</p>
+<p>You might be thinking at this point, what is the advantage of this over
+just recursively composing a SNARK? Recall that recursive composition also
+involves encoding the SNARK verifier as part of the relation that the SNARK
+proves. The advantage is that folding schemes usually have a verifier that
+is <strong>much simpler than a SNARK verifier.</strong> So this encoding of the
+<em>folding</em> verifier as part of the relation $R^*$ is potentially much more
+efficient than encoding a SNARK verifier as part of $R^*$. It is worth
+mentioning, though, that doing the recursion properly in order to get an
+efficient scheme is quite nuanced. In practice (with Nova specifically, at
+least) it involves using cycles of elliptic curves to make sure most of the
+verifier work is done in the &ldquo;native&rdquo; field. The details of this get quite
+hairy. I&rsquo;m going to ignore these details for now, and will instead describe
+the recursion abstractly, based on the definition of folding given above.
+The goal is that by understanding this simpler, abstract version of
+recursion, it should be easier to read and understand the hairier &ldquo;real&rdquo;
+version in the Nova paper.</p>
+<h4 id="making-it-formal">Making it Formal</h4>
+<p>Let&rsquo;s formalize the new relation $R^*$. Imagine we have run $i$ steps of the
+computation. The drawing
+below illustrates the current state of the system. We want to set things up
+so that if we only have access to data from most recent step of the IVC (in
+the drawing, the data to the right of the dotted line), and all other
+computation state (the data to the left of the dotted line) has been
+forgotten, just this data should be sufficient for both computing
+and verifying the IVC proof.</p>
+<p><img src="/nova/incremental_step.png" alt="Incremental step"></p>
+<p>Two notes before defining $R^*$: first, notice that the naive
+$\VerifyIVC_f$ above actually verifies a valid IVC computation starting
+with some specific state $\st_0$. It is actually very useful in practice to
+have the IVC proof $\pi_i$ not only prove the computation was done
+correctly, but also prove that the computation started with some specified
+$\st_0$. So we will include this $\st_0$ in the statement $x_i$ given to
+$R^*$. Second, recall that we want $x_i$ to make claims about $\st_i$ and
+$x_{1 \rightarrow (i-1)}$, but we can&rsquo;t simply include $x_{1 \rightarrow
+i-1}$ in $x_i$. This is because we want $\lvert x_i \rvert = \lvert x_{1
+\rightarrow i-1} \rvert$, otherwise the statement size would increase with
+each round of the IVC. However, we can avoid this size blowup by using
+a hash function $H$.</p>
+<p>We are now ready to define $R^*$. A valid witness statement will be of the
+form $x_i = H(i, \st_0, \st_i, x_{1 \rightarrow (i-1)})$, and a valid witness
+will be of the form
+$w_i = \newcommand{\wtns}{(x'_i, \st_{i-1}, y_i, x_{1 \rightarrow (i-2)}, \tau_{1 \rightarrow (i-1)})}\wtns$,
+where $x'_i$ is the preimage of $x_i$.
+$R^*$ is then defined as follows.</p>
+<blockquote>
+<p>$R^*(x_i, w_i)$:</p>
+<ol>
+<li>Parse $w_i = \wtns$,
+where $x'_i = (i, \st_0, \st_i, x_{1 \rightarrow (i-1)})$.</li>
+<li>Set $x_{i-1} = H(i-1, \st_0, \st_{i-1}, x_{1 \rightarrow (i-2)})$.</li>
+<li>Return 1 if all the following conditions hold, else return 0:
+<ul>
+<li>$x_i = H(x'_i)$</li>
+<li>$\st_i = f(\st_{i-1}, y_i)$</li>
+<li>If $i = 1$, $\st_{i-1} = \st_0$</li>
+<li>If $i > 1$, $\VerifyFold_{R^*}(x_{1 \rightarrow (i-2)}, x_{i-1}, x_{1 \rightarrow (i-1)} , \tau_{1 \rightarrow (i-1)}) = 1$</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p>One final detail: in the case where $i = 2$, it is not clear what to set
+$x_{1 \rightarrow (i-2)}$ to be in the witness, since we only need to start
+folding after we have statements $x_1$ and $x_2$. To fix this with minimal
+mess, we can define $R^*$ to include one &ldquo;dummy&rdquo; statement $x_\bot = (0,
+\bot, \bot, \bot)$, and can set $x_{1 \rightarrow (i-2)} = x_\bot$ in that
+case.</p>
+<p>Now that we have the new relation $R^*$, we can finally define the
+augmented $f^*$ and $\VerifyIVC_f$.</p>
+<blockquote>
+<p>$f^*(\st_0, \st_{i-1}, y_i, \pi_{i-1}):$</p>
+<ol>
+<li>Compute $\st_i \leftarrow f(\st_{i-1}, y_i)$.</li>
+<li>Parse $\pi_{i-1} = (\st_{i-2}, y_{i-1}, x_{1 \rightarrow (i-3)}, x_{1 \rightarrow (i-2)}, w_{1 \rightarrow (i-2)}, \tau_{1 \rightarrow (i-2)}).$</li>
+<li>Set $x_{i-1} = H(i-1, \st_{i-1}, x_{1 \rightarrow (i-2)}) = H(x'_{i-1})$, and set
+$w_{i-1} = (x'_{i-1}, \st_{i-2}, y_{i-1}, x_{1 \rightarrow (i-3)}, \tau_{1 \rightarrow (i-2)})$.</li>
+<li>Compute $$(x_{1 \rightarrow (i-1)}, w_{1 \rightarrow (i-1)}, \tau_{1 \rightarrow (i-1)}) \leftarrow \Fold_R(x_{1\rightarrow (i-2)}, w_{1\rightarrow (i-2)}, x_{i-1}, w_{i-1}).$$</li>
+<li>Set $\pi_i = (\st_{i-1}, y_i, x_{1 \rightarrow (i-2)}, x_{1 \rightarrow (i-1)}, w_{1 \rightarrow (i-1)}, \tau_{1 \rightarrow (i-1)})$.</li>
+<li>Output $(\st_i, \pi_i)$.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>$\VerifyIVC_f(\st_i, \pi_i):$</p>
+<ol>
+<li>Parse $\pi_i = (\st_{i-1}, y_i, x_{1 \rightarrow (i-2)}, x_{1 \rightarrow (i-1)}, w_{1 \rightarrow (i-1)}, \tau_{1 \rightarrow (i-1)})$.</li>
+<li>Set $x_i = H(x'_i) = H(i, \st_i, x_{1 \rightarrow (i-1)})$, and set
+$w_i = \wtns$.</li>
+<li>If $(x_i, w_i) \notin R^*$, return 0.</li>
+<li>If $(x_{1 \rightarrow (i-1)}, w_{1 \rightarrow (i-1)}) \notin R^*$, return
+0.</li>
+<li>Return 1.</li>
+</ol>
+</blockquote>
+<p>Note that the Nova paper has a single additional step: they finally wrap
+the verification step $\VerifyIVC_f$ in a SNARK (the specific one they use
+is based on Spartan), in order to get a succinct proof whose size is
+independent of $w_i$. We aren&rsquo;t interested in this step for our purposes,
+since we&rsquo;ll be wrapping this verification inside Groth16 instead.</p>
+<h2 id="nova-and-mova-and-how-they-are-useful-for-our-specific-problem">Nova and Mova, and how they are useful for our specific problem</h2>
+<p>The first part of this post focused on the general questions what a folding
+scheme is and how it is useful. This next part will focus on specific
+folding schemes, and will switch to a context that is more focused on
+solving our problem of speeding up the SHA computation inside our Groth16
+circuit.</p>
+<h3 id="committed-relaxed-r1cs">Committed Relaxed R1CS</h3>
+<p>We&rsquo;ve so far talked about folding schemes abstractly, without spending much
+time on the specific class $\R$ of relations which a folding scheme might
+support folding over. In practice, a folding scheme is defined to support
+a very specific class $\R$ in order to take advantage of the structure of
+$\R$. Nova (and Mova, which is heavily based on Nova) specifically starts
+out with the goal of getting folding for the class
+$\newcommand{\Rronecs}{\mathcal{R}_\mathsf{R1CS}}\Rronecs$ of all R1CS
+relations. Recall that a R1CS relation $R \in \Rronecs$ is defined by
+a field $\newcommand{\F}{\mathbb{F}}\F$, three matrices $A, B,$ and $C$
+over $\F$, and a statement size $\ell$: $R = (\F, A, B, C, \ell)$.  We then
+say that $\vec z = (\vec x, \vec w) \in R$ iff $\lvert \vec x \rvert = \ell$ and
+</p>
+$$A\vec z \circ B\vec z = C\vec z,$$
+<p>
+where $\circ$ is the hadamard product.</p>
+<p>Nova&rsquo;s starting observation is the following. Imagine we have have $\vec
+z_1$ and $\vec z_2$, and we want to fold these two statement-witness pairs.</p>
+<h3 id="nova-formalized">Nova, formalized</h3>
+<p><em>Todo (depending on feedback):</em></p>
+<ul>
+<li>Explain the actual Nova folding scheme w.r.t. committed relaxed R1CS</li>
+<li>Explain the recursion step in terms of Nova, the bug, the fix</li>
+<li>Explain CycleFold (I will have to learn this because I don&rsquo;t understand
+it)</li>
+<li>Explain ProtoGalaxy/Mova</li>
+</ul>
+
+</article>
+
+
+                <hr>
+
+                <p>© 2024 Rex Fernando · Website <a href="">code</a> based on <a href="">Hugo</a>, with theme <a href="">nostyleplease</a></p>
+
+            </div>
+        </main>
+    </body></html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-us"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="Product Check The main building block for Plookup is the Product Check. Assume you have a finite prime-order field $\newcommand{\F}{\mathbb{F}}\F = \F_q$, a polynomial commitment $\newcommand{\com}{\mathsf{com}}\com(f)$ for some polynomial $f \in \F[X]$, and a set $\Omega = \{ 1, \omega, \omega^2, \dots, \omega^{n-1} \}$ of powers of the primitive $n$-th root of unity $\omega$. The &ldquo;Product Check&rdquo; is a succinct, interactive protocol which allows a prover to convince a verifier of the statement &ldquo;$\prod_{a \in \Omega} f(a) = 1$.">  
+
+  
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)'], ['$', '$']]                  
+    }
+  };
+</script>
+
+<link rel="stylesheet" type="text/css" href="http://tikzjax.com/v1/fonts.css">
+<script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  
+    
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+  theme: 'neutral',
+});
+</script>
+
+
+  
+
+  <title>
+    
+      Explanation of Product Check and Plookup
+    
+  </title>
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.bbd84655f1da4bb1764405251710a1464b71601420ad7d8631e6af75d6b9baa8c640a95b6e2d585bd30418f9d72cfb1459d8e6a442c8cc09ce6f08a1cbe03342.css" integrity="sha512-u9hGVfHaS7F2RAUlFxChRktxYBQgrX2GMeavdda5uqjGQKlbbi1YW9MEGPnXLPsUWdjmpELIzAnObwihy&#43;AzQg==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">..</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2024-09-10 00:00:00 &#43;0000 UTC">
+            2024-09-10
+        </time>
+    </p>
+
+    <h1>Explanation of Product Check and Plookup</h1>
+
+    
+
+    <h2 id="product-check">Product Check</h2>
+<p>The main building block for Plookup is the Product Check. Assume you have
+a finite prime-order field $\newcommand{\F}{\mathbb{F}}\F = \F_q$,
+a polynomial commitment $\newcommand{\com}{\mathsf{com}}\com(f)$ for some
+polynomial $f \in \F[X]$, and a set $\Omega = \{ 1, \omega, \omega^2,
+\dots, \omega^{n-1} \}$ of powers of the primitive $n$-th root of unity
+$\omega$. The &ldquo;Product Check&rdquo; is a succinct, interactive protocol which
+allows a prover to convince a verifier of the statement &ldquo;$\prod_{a \in
+\Omega} f(a) = 1$.&rdquo; It can be made non-interactive using Fiat-Shamir. This
+product check is a key ingredient in both the Plonk snark and the Plookup
+lookup argument.</p>
+<p>To construct the product check, we define a polynomial $t$ of the same
+degree $n$ as $f$. We define $t$ inductively:
+[note this isn&rsquo;t actually an inductive relation and point 2 captures point
+1 if you start with $s=0$ instead of $s=1$. Should fix this exposition]</p>
+<ol>
+<li>$t(1) = f(1)$, and</li>
+<li>$t(\omega^s) = \prod_{i = 0}^s f(\omega^i)$ for all $s \in 1, \dots, n-1$.</li>
+</ol>
+<p>Notice that if the claim holds, we have an additional equality:</p>
+<ol start="3">
+<li>$t(\omega^{n-1}) = 1$.</li>
+</ol>
+<h3 id="the-recurrence-relation">The Recurrence Relation</h3>
+<p>Directly from the definition of $t$ and from the third equation above, we
+get that the following recurrence relation holds:
+</p>
+$$t(\omega \cdot x) = t(x) \cdot f(\omega \cdot x), \forall x \in \Omega.$$
+<h3 id="the-vanishing-argument">The Vanishing Argument</h3>
+<p>In addition to the polynomial $t$, we will use the following standard trick
+to convince a verifier that some polynomial evaluates to zero on all points
+in $\Omega$. Assume we have such a polynomial $h$. Assume the prover and
+verifier also have access to some polynomial $z$ such that $z(x) = 0$ for
+all $x \in \Omega$. Note that this polynomial is simply $z(X) = X^n - 1$
+when $\Omega$ is the set of $n$-th roots of unity. Then, to convince the
+verifier that $h(x) = 0$ for all $x \in \Omega$, it suffices to convince
+the verifier that $z$ divides $h$ as formal polynomials. This is the idea
+behind the following protocol.</p>
+<blockquote>
+<p><strong>Vanishing Argument Protocol.</strong>
+We assume the prover has a polynomial $h$, and both the prover and verifier have $\com(h)$.</p>
+<ol>
+<li>Prover divides $h$ by $z$ to get a quotient polynomial $q$ such that
+$h(X) = z(X) \cdot q(X)$. It sends $\com(q)$ to the verifier.</li>
+<li>Verifier sends a random $r \in \F$ to the prover.</li>
+<li>Prover sends evaluations $h(r)$ and $q(r)$ to the verifier, along with
+corresponding evaluation proofs.</li>
+<li>Verifier computes $z(r)$ on its own. It accepts iff the evaluation proofs are
+valid and $h(r) = z(r) \cdot q(r)$.</li>
+</ol>
+</blockquote>
+<h4 id="cost">Cost</h4>
+<ul>
+<li>(prover cost) 1 polynomial division of size $m$, where $m$ is the degree of $h$</li>
+<li>(prover cost and communication cost) 1 polynomial commitment of degree $m-n$, where $m$ is as above and $n
+  = \lvert \Omega \rvert$</li>
+<li>(prover cost and communication cost) 2 evaluation proofs, one for $\com(h)$ and one for $\com(q)$. Can we
+batch these somehow? (unsure b/c they are for 2 diff polynomials)</li>
+<li>(verifier cost) 2 evaluation proof verifications and the computation of
+$z(r)$.</li>
+</ul>
+<h3 id="the-main-protocol">The Main Protocol</h3>
+<p>Prover can commit to some polynomial $t$.
+Prover needs to convince the verifier that:</p>
+<ul>
+<li>recurrence relation holds wrt committed $t$</li>
+<li>$t(\omega^{n-1}) = 1$</li>
+</ul>
+<p>The product check uses the vanishing argument above. For clarity, we will
+expand out the invocation of this subprotocol.</p>
+<blockquote>
+<p><strong>Product Check Protocol.</strong>
+We assume the prover has a polynomial $f$, and both the prover and verifier have $\com(f)$.</p>
+<ol>
+<li>Prover computes the polynomial $t$ above, and sends to the verifier.
+Prover also sends evaluation proof for $t(\omega^{n-1}) = 1$.</li>
+<li><strong>Prover and verifier run vanishing arugment protocol to show
+the polynomial $t(\omega \cdot X) - t(X) \cdot f(\omega \cdot X)$
+vanishes:</strong></li>
+<li>Prover divides $t(\omega \cdot X) - t(X) \cdot f(\omega \cdot X)$ by $z$ to get
+a quotient polynomial $q$. It sends $\com(q)$ to the verifier.</li>
+<li>Verifier sends a random $r \in \F$ to the prover.</li>
+<li>Prover sends evaluations $t(r)$, $t(\omega \cdot r)$, $f(\omega \cdot r)$
+and $q(r)$ to the verifier, along with corresponding evaluation
+proofs.</li>
+<li>Verifier computes $z(r)$ on its own. It accepts iff the evaluation
+proofs are valid and
+$t(\omega \cdot r) - t(r) \cdot f(\omega \cdot r) = z(r) \cdot q(r)$.</li>
+</ol>
+</blockquote>
+<h2 id="a-important-variant-product-equality-check">A Important Variant: Product <em>Equality</em> Check</h2>
+<p>We can use the same ideas to check that $\prod_{a \in \Omega} f(a)
+= \prod_{a \in \Omega} g(a)$, for committed $f$ and $g$. This is equivalent
+to checking the <em>rational function</em> equality $\prod_{a \in \Omega} f(a) / g(a) = 1$:</p>
+$$
+\begin{align}
+& \prod_{a \in \Omega} f(a) / g(a) = 1 \\
+\Leftrightarrow & \frac{\prod_{a \in \Omega} f(a)}{ \prod_{a \in \Omega} g(a) } = 1 \\
+\Leftrightarrow & \prod_{a \in \Omega} f(a)  = \prod_{a \in \Omega} g(a).
+\end{align}
+$$
+<p><strong>Main idea:</strong> instead of using the vanishing argument to check the
+recurrence $t(\omega \cdot x) = t(x) \cdot f(\omega \cdot x)$,
+use it to check
+$g(\omega \cdot x) \cdot t(\omega \cdot x) = t(x) \cdot f(\omega \cdot x)$.</p>
+<h4 id="cost-1">Cost</h4>
+<ul>
+<li>(prover cost and communication cost) 1 polynomial commitment $\com(t)$ of degree $n$</li>
+<li>(prover cost and communicaction cost) 1 evaluation proof with respect to
+$\com(t)$</li>
+<li>(verifier cost) 1 evaluation proof verification</li>
+<li>Vanishing argument costs:
+<ul>
+<li>(prover cost) 1 polynomial division of size $2n$</li>
+<li>(prover cost and communication cost) 1 polynomial commitment of degree $2n - n = n$</li>
+<li>(prover cost and communication cost) 4 evaluation proofs. <span style="color: orange">Is this right? Or is this only for the product check,
+    not the product equality check?</span>
+</li>
+<li>(verifier cost) 4 evaluation proof verifications (batchable I think) and the computation of
+$z(r)$. <span style="color: orange">Again, is this right?</span>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="plookup">Plookup</h1>
+<p>The goal of a lookup argument is as follows. We assume we have two vectors
+$(f_0, \dots, f_{n-1})$ and $(t_0, \dots, t_{d-1})$. We can commit to these vectors
+by setting $\Omega$ to be the roots of unity of an appropriate size (to be
+determined later) and defining polynomials $f(X)$ and $t(X)$ such that
+$f(\omega^i) = f_i$ for all $i \in [n]$ and $t(\omega^i) = t_i$ for all $i
+\in [d]$. Assume the verifier has polynomial commitments $\com(f)$ and
+$\com(t)$. Then the prover wants to convince the verifier that for all $i
+\in [n]$, $f(\omega^i) = t(\omega^j)$ for some $j \in [d]$.</p>
+<p>In the following, we will refer to $t$ as the lookup table.
+We also assume $d = n+1$; it is possible to pad $d$ while preserving the
+statement by padding $d$ with its last value.</p>
+<p><em>(Overloading $t$; should go back and change it in the previous section to
+something else)</em></p>
+<h3 id="the-products">The products</h3>
+<p>Let
+</p>
+$$
+F_{\beta, \gamma} = \left(1 + \beta\right)^n \prod_{i = 0}^{n-1}\left(\gamma + f(\omega^i)\right)
+\prod_{i = 0}^{d-2}\left(\gamma(1 + \beta) + t(\omega^i) + t(\omega^{i+1})\right)
+$$
+<p>and let</p>
+$$
+G_{\beta, \gamma} = \prod_{i = 0}^{n+d-2}( \gamma(1 + \beta) +
+s(\omega^i) + \beta \cdot s(\omega^{i+1})  ) 
+$$
+<p>
+for some polynomial $s(X)$ of degree $n + d$. <span style="color: orange">Check
+whether I haven't made an off-by-one error here.</span>
+</p>
+<p><strong>Claim:</strong>
+If:</p>
+<ul>
+<li>$\forall i \in [n]$, $f(\omega^i) = t(\omega^j)$ for some $j \in [d]$,</li>
+<li>The values of $f$ are sorted in the same order of that of the values of $t$, and</li>
+<li>The vector $(s(1), s(\omega), s(\omega^2), \dots, s(\omega^{n+d-1})$
+encodes the sorted concatenation of the vectors
+$(f_0, \dots, f_{n-1})$ and $(t_0, \dots, t_{d-1})$,</li>
+</ul>
+<p>then $F_{\beta, \gamma} = G_{\beta, \gamma}$. On the other hand, if the
+above three properties are not all true then if $\beta$ and $\gamma$ are
+uniformly chosen from $\F$ (after $f$, $t$ and $s$ are fixed) then with overwhelming probability
+$F_{\beta, \gamma} \neq G_{\beta, \gamma}$.</p>
+<p><em>I haven&rsquo;t yet worked through the proof of this claim.</em></p>
+<h3 id="using-the-product-check">Using the Product Check</h3>
+<p>Assume the prover and the verifier have $\com(f)$, $\com(t)$ and $\com(s)$.
+The verifier then can choose $\beta$ and $\gamma$ at random from $\F$. It
+remains for the prover to convince the verifier that $F_{\beta, \gamma} = G_{\beta, \gamma}$.</p>
+<p>We want to use the product equality check argument system above to do this.</p>
+<p>If $d = n+1$, then we can define two polynomials $a(X)$ and
+$b(X)$, such that for all $i \in \{0, \dots, n-1\}$,</p>
+$$
+a(\omega^i) = (1 + \beta) \left(\gamma + f(\omega^i)\right) \cdot \left(\gamma(1 + b) + t(\omega^i) + t(\omega^{i+1})\right)
+$$
+<p>
+and
+</p>
+$$
+b(\omega^i) =  \Bigl( \left(\gamma(1 + \beta)\right) + s(\omega^i) + \beta \cdot s(\omega^{i+1})\Bigr) \cdot \Bigl( \left(\gamma(1 + \beta)\right) + s(\omega^{2i})  + \beta \cdot s(\omega^{2i+1})\Bigr).
+$$
+<p>Then it follows that $\prod_{i = 0}^{n-1}a(\omega^i) = F_{\beta,\gamma}$ and $\prod_{i=0}^{n-1}b(\omega^i) = G_{\beta,\gamma}$.</p>
+<p><strong><span style="color: orange"> Issue:</span>
+</strong> <span style="color: orange">It seems like we might need to use two
+different sets of roots of unity. Isn't it the case that the product
+equality check needs to work over a set $\Omega$ of size equal to the
+product size $n$? Whereas $s$ must be defined over a set $\Omega'$ of size
+$2n+1$...</span>
+</p>
+<span style="color: orange">
+Thought about it, and yes, we need to use two different sets. This is
+because if we try to use the same set $\Omega'$ for both defining $s$ and for
+defining $a$ and $b$, it must obviously have size $2n+1$ to encode all of
+the vector $(s_0, \dots, s_{2n})$. But this means that the equations above
+only hold for half of the points on $\Omega'$. When we try to do a zero
+test, this means that we only want zeros on half of $\Omega'$, and there
+isn't necessarily a succinct vanishing polynomial $z$ which vanishes on
+this subset of $\Omega'$.
+</span>
+
+<p>Regardless of the issue above (don&rsquo;t think it&rsquo;s a problem to use two sets
+$\Omega$ and $\Omega'$, we can use the product equality check w.r.t. $a$
+and $b$ (which can be evaluated assuming we can evaluate $f$ $t$ and $s$).</p>
+<p><strong>Q:</strong> How many
+evaluation proofs does the prover need to compute in order to do this
+product equality check?</p>
+<ul>
+<li>3 to evaluate $a$ on a point</li>
+<li>4 to evaluate $b$ on a point</li>
+<li>2 to evaluate the accumulator (call this poly $\zeta$) on some point $r$ and $\omega \cdot r$</li>
+<li>1 to evaluate quotient polynomial</li>
+</ul>
+<p>10?? Is this right? I thought Plonk only needs 7 or something.</p>
+<p>I guess you only need to do one multi-opening for the 4 points on $s$, one
+for the two on $t$, and one for the two on $\zeta$? So with this in mind:</p>
+<ul>
+<li>2 to evaluate $a$ on a point</li>
+<li>1 to evaluate $b$ on a point</li>
+<li>1 to evaluate the accumulator (call this poly $\zeta$) on some point $r$ and $\omega \cdot r$</li>
+<li>1 to evaluate quotient polynomial</li>
+</ul>
+<p>If this is correct, this is much better&hellip;</p>
+<hr>
+<h1 id="more-questions">More Questions</h1>
+<ul>
+<li>How do you compute a primitive $n$-th root of unity given a finite
+field $\F_q$? What happens when there is no such root for an $n$ that you
+want? I.e., do we have to round up, and does this cause nontrivial
+performance overhead?</li>
+</ul>
+
+</article>
+
+
+                <hr>
+
+                <p>© 2024 Rex Fernando · Website <a href="">code</a> based on <a href="">Hugo</a>, with theme <a href="">nostyleplease</a></p>
+
+            </div>
+        </main>
+    </body></html>
