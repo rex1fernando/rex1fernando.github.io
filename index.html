@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta name=generator content="Hugo 0.166.0"><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Cryptographer at Aptos Labs. Threshold encryption, encrypted mempools, MPC, zero-knowledge proofs. PhD UCLA (Amit Sahai), postdoc CMU."><meta name=author content="Rex Fernando"><link rel=canonical href=https://rex1fernando.github.io/><meta property="og:type" content="website"><meta property="og:title" content="Rex Fernando"><meta property="og:url" content="https://rex1fernando.github.io/"><meta property="og:description" content="Cryptographer at Aptos Labs. Threshold encryption, encrypted mempools, MPC, zero-knowledge proofs. PhD UCLA (Amit Sahai), postdoc CMU."><meta property="og:site_name" content="Rex Fernando"><meta name=twitter:card content="summary"><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><script>MathJax={tex:{displayMath:[["\\[","\\]"],["$$","$$"]],inlineMath:[["\\(","\\)"],["$","$"]]}}</script><link rel=stylesheet type=text/css href=http://tikzjax.com/v1/fonts.css><script src=https://tikzjax.com/v1/tikzjax.js></script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+  theme: 'neutral',
+});
+</script><title>Rex Fernando</title><link rel=stylesheet href=/css/site.57caebe6225a01c2690c2752b3c8b946ebbc23d89d056681c87d9fd2cdeadf26e196f23b3329d0c1f5b1a048d8ef5c5a75a6bf8d76ba1fbd6cf34c26c0525f63.css integrity="sha512-V8rr5iJaAcJpDCdSs8i5Ruu8I9idBWaByH2f0s3q3ybhlvI7MynQwfWxoEjY71xadaa/jXa6H71s80wmwFJfYw=="></head><body a=auto><main class=page-content aria-label=Content><div class=w><header><h1>Rex Fernando</h1></header><p>I&rsquo;m a cryptographer. Since 2023 I&rsquo;ve been at <a href=https://aptoslabs.com/>Aptos
+Labs</a>, where I work on the <em>practice</em> of
+cryptography. Previously, I did a PhD at UCLA with <a href=https://www.cs.ucla.edu/~sahai/>Amit
+Sahai</a> and a postdoc at Carnegie Mellon
+with <a href=https://sites.google.com/view/aayushjain/home>Aayush Jain</a> and <a href=https://elaineshi.com>Elaine Shi</a>, working on the <em>theory</em> of cryptography
+— secure multiparty computation, zero-knowledge arguments, obfuscation.</p><p>There is a large gap between those two things, and most of what I do now
+involves trying to bridge this gap: taking primitives that were known
+to be <em>possible</em> and making them efficient enough to run during a consensus
+protocol.</p><p>I&rsquo;m based in New York. Email me at <a href=mailto:rex1fernando@gmail.com>rex1fernando@gmail.com</a>.</p><h2 id=encrypted-mempool>Encrypted mempool</h2><p>I led the effort to build <a href=https://aptos.dev/build/sdks/ts-sdk/building-transactions/encrypted-pending-transactions>the first encrypted mempool deployed on an L1</a>. An
+encrypted mempool is a new technology that prevents malicious
+extractive behavior targeting pending transactions. It does this by allowing users to
+encrypt their transaction payloads before submitting, and then doing
+decryption <em>directly on the nodes of the network</em> via a threshold-shared
+secret key after the transaction is part of a committed block.</p><p>Doing this naively via standard threshold encryption would involve
+a prohibitive amount of overhead. We solved this using an exciting new
+primitive called <strong>batched threshold encryption (BTE)</strong>. We constructed the first
+practical BTE scheme in <a href=https://eprint.iacr.org/2024/1575>ePrint 2024/1575</a>.
+Our subsequent work, <strong><a href=https://eprint.iacr.org/2025/2032>TrX</a></strong>,
+improves upon this scheme and gives the
+first integration of an encrypted mempool with a high-performance BFT
+protocol. It costs <strong>27 ms of proposal-to-execution latency, a 14%
+overhead</strong> over the unmodified baseline. Our system is <a href=https://aptos.dev/build/sdks/ts-sdk/building-transactions/encrypted-pending-transactions>live on the Aptos
+network!</a></p><h3 id=a-new-non-interactive-dkg>A new non-interactive DKG</h3><p>Besides the new BTE scheme, the other major building block for our
+encrypted mempool is a brand-new <strong>non-interactive distributed key generation
+(DKG)</strong> protocol. In order to coincide with the proof-of-stake majority
+assumption of the network, a new secret key for the system must shared
+at the epoch boundary, i.e., every time the nodes&rsquo; stake weights change.
+This is done via a DKG. A <em>non-interactive</em> DKG differs from standard
+interactive protocols, in that the key for the next epoch can be generated
+by the nodes in the <em>current</em> epoch. This means the epoch change logic is much
+simpler, and causes a much faster epoch-start.</p><p>We implemented what is probably the <em>largest-scale non-interactive DKG in
+production</em> in order to power encrypted mempool. At its core is a new, fast
+ZK range proof called <strong><a href=https://eprint.iacr.org/2025/1159>DeKartProof</a></strong>.
+Along with some new techniques for DKG message dissemination, this new
+range proof enabled us to scale to a full L1-sized setting with over
+a hundred stake-weighted nodes.</p><h2 id=publications--preprints>Publications / Preprints</h2><h3 id=batched-threshold-encryption>Batched threshold encryption</h3><ul><li><strong>TrX: Encrypted Mempools in High Performance BFT Protocols.</strong>
+Rex Fernando, Guru-Vamsi Policharla, Andrei Tonkikh, Zhuolun Xiang.
+<em>SBC 2026.</em> <a href=https://eprint.iacr.org/2025/2032>ePrint 2025/2032</a> &mdash; <span style=color:teal>Deployed on Aptos</span></li><li><strong>Efficiently-Thresholdizable Batched Identity Based Encryption, with
+Applications.</strong> Amit Agarwal, Rex Fernando, Benny Pinkas.
+<em>CRYPTO 2025, SBC 2025.</em> <a href=https://eprint.iacr.org/2024/1575>ePrint 2024/1575</a></li></ul><h3 id=zero-knowledge-arguments>Zero-knowledge arguments</h3><ul><li><p><strong>Couplet: Multivariate Polynomial Commitments with Two-Group-Element Openings.</strong>
+Weijie Wang, Alin Tomescu, Rex Fernando, Charalampos Papamanthou.
+<a href=https://eprint.iacr.org/2026/2106>ePrint 2026/2106</a></p></li><li><p><strong>DekartProof: Efficient Vector Range Proofs and Their Applications.</strong>
+Dan Boneh, Trisha Datta, Rex Fernando, Kamilla Nazirkhanova, Alin Tomescu.
+<em>SBC 2025.</em> <a href=https://eprint.iacr.org/2025/1159>ePrint 2025/1159</a> &mdash; <span style=color:teal>a univariate version is deployed on Aptos as part of the
+DKG for encrypted mempool</span></p></li><li><p><strong>Distributed-Prover Interactive Proofs.</strong>
+Sourav Das, Rex Fernando, Ilan Komargodski, Elaine Shi, Pratik Soni.
+<em>TCC 2023.</em> <a href=https://doi.org/10.1007/978-3-031-48615-9_4>doi</a></p></li><li><p><strong>Account ZK-Rollups from Sumcheck Arguments.</strong>
+Rex Fernando, Arnab Roy. <em>CCS 2023 (poster).</em>
+<a href=https://doi.org/10.1145/3576915.3624405>doi</a></p></li><li><p><strong>Statistical ZAP Arguments.</strong>
+Saikrishna Badrinarayanan, Rex Fernando, Aayush Jain, Dakshita Khurana,
+Amit Sahai. <em>EUROCRYPT 2020.</em>
+<a href=https://eprint.iacr.org/2019/780>ePrint 2019/780</a></p></li></ul><h3 id=secure-multiparty-computation>Secure multiparty computation</h3><ul><li><strong>Two-Round Concurrent 2PC from Sub-exponential LWE.</strong>
+Behzad Abdolmaleki, Saikrishna Badrinarayanan, Rex Fernando,
+Giulio Malavolta, Ahmadreza Rahimi, Amit Sahai. <em>ASIACRYPT 2023.</em>
+<a href=https://eprint.iacr.org/2022/1719>ePrint 2022/1719</a></li><li><strong>Maliciously-Secure MrNISC in the Plain Model.</strong>
+Rex Fernando, Aayush Jain, Ilan Komargodski. <em>EUROCRYPT 2023.</em>
+<a href=https://eprint.iacr.org/2021/1319>ePrint 2021/1319</a></li><li><strong>Maliciously Secure Massively Parallel Computation for All-but-One
+Corruptions.</strong> Rex Fernando, Yuval Gelles, Ilan Komargodski, Elaine Shi.
+<em>CRYPTO 2022.</em> <a href=https://eprint.iacr.org/2022/1027>ePrint 2022/1027</a></li><li><strong>Secure Massively Parallel Computation for Dishonest Majority.</strong>
+Rex Fernando, Ilan Komargodski, Yanyi Liu, Elaine Shi. <em>TCC 2020.</em>
+<a href=https://eprint.iacr.org/2020/1157>ePrint 2020/1157</a></li></ul><h3 id=obfuscation-and-witness-encryption>Obfuscation and witness encryption</h3><ul><li><strong>Output Compression, MPC, and iO for Turing Machines.</strong>
+Saikrishna Badrinarayanan, Rex Fernando, Venkata Koppula, Amit Sahai,
+Brent Waters. <em>ASIACRYPT 2019.</em>
+<a href=https://eprint.iacr.org/2018/866>ePrint 2018/866</a></li><li><strong>Preventing CLT Attacks on Obfuscation with Linear Overhead.</strong>
+Rex Fernando, Peter M. R. Rasmussen, Amit Sahai. <em>ASIACRYPT 2017.</em>
+<a href=https://eprint.iacr.org/2016/1070>ePrint 2016/1070</a></li></ul><h3 id=distributed-agreement-and-anonymity>Distributed agreement and anonymity</h3><ul><li><strong>Scalable Distributed Agreement from LWE: Byzantine Agreement, Broadcast,
+and Leader Election.</strong> Rex Fernando, Yuval Gelles, Ilan Komargodski.
+<em>ITCS 2024.</em> <a href=https://doi.org/10.4230/LIPIcs.ITCS.2024.46>doi</a></li><li><strong>Non-Interactive Anonymous Router with Quasi-Linear Router Computation.</strong>
+Rex Fernando, Elaine Shi, Pratik Soni, Nikhil Vanjani, Brent Waters.
+<em>TCC 2023.</em> <a href=https://eprint.iacr.org/2022/1395>ePrint 2022/1395</a></li></ul><h3 id=thesis>Thesis</h3><ul><li><strong>Stronger Round-Optimal Secure Protocols without Setup.</strong> UCLA, 2022.
+<a href=https://www.escholarship.org/uc/item/3n41s1zc>eScholarship</a></li></ul><h2 id=earlier-work>Earlier work</h2><p>Before cryptography I worked in computational number theory at UW Madison and
+in programming languages at Iowa State. Some publications from that past
+life:</p><ul><li><strong>Infinitely Many Carmichael Numbers for a Modified Miller-Rabin Prime
+Test.</strong> Eric Bach, Rex D. Fernando. <em>ISSAC 2016</em>, 47–54.
+<a href=https://doi.org/10.1145/2930889.2930911>doi</a> ·
+<a href=https://arxiv.org/abs/1512.00444>arXiv:1512.00444</a></li><li><strong>Modular Reasoning in the Presence of Event Subtyping.</strong>
+Mehdi Bagherzadeh, Robert Dyer, Rex D. Fernando, José Sánchez,
+Hridesh Rajan. <em>LNCS Transactions on Modularity and Composition</em> 2016,
+167–223 (<a href=https://doi.org/10.1007/978-3-319-46969-0_5>doi</a>); conference
+version <em>MODULARITY 2015</em>, 117–132
+(<a href=https://doi.org/10.1145/2724525.2724569>doi</a>)</li><li><strong>Event Type Polymorphism.</strong> Rex D. Fernando, Robert Dyer, Hridesh Rajan.
+<em>FOAL 2012</em>, 33–38. <a href=https://doi.org/10.1145/2162010.2162020>doi</a></li><li><strong>Modularizing Crosscutting Concerns with Ptolemy.</strong> Hridesh Rajan,
+Sean L. Mooney, Gary T. Leavens, Robert Dyer, Rex D. Fernando,
+Mohammad Ali Darvish Darab, Bryan Welter. <em>OOPSLA Companion 2011</em>, 31–32.
+<a href=https://doi.org/10.1145/2048147.2048163>doi</a></li><li><strong>SNPlotz: A Generic Genome Plot Tool to Aid the SNP Association Studies.</strong>
+Zhi-Liang Hu, Rex Fernando, Dorian Garrick, James M. Reecy.
+<em>BMC Bioinformatics</em> 11(S4):P4, 2010.
+<a href=https://doi.org/10.1186/1471-2105-11-S4-P4>doi</a></li></ul><h2 id=elsewhere>Elsewhere</h2><p><a href=mailto:rex1fernando@gmail.com>Email</a> ·
+<a href="https://eprint.iacr.org/search?q=Rex+Fernando">IACR ePrint</a> ·
+<a href=https://github.com/rex1fernando>GitHub</a> ·
+<a href=https://dblp.org/pid/36/8838>DBLP</a></p><hr><p>© 2026 Rex Fernando · Built with
+<a href=https://gohugo.io/>Hugo</a> and the
+<a href=https://github.com/g-hanwen/hugo-theme-nostyleplease>nostyleplease</a> theme</p></div></main></body></html>
