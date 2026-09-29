@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en-us"><head>
+<html lang="en-us"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <meta name="description" content="These three concepts are related. Going to try to explore the relationship (with respect to non-interactive zero knowledge) in this note.
-Simulation-extractability High-level: Assume we have some NIZK. An adversary, given access to a simulation oracle, produces a proof $\pi$ for a statement $x$. There should be an extractor that whenever $\pi$ is true, extracts a valid witness for $x$.
-Realized my intuition doesn&rsquo;t specify whether the oracle accepts false statements.">  
+   <meta name="description" content="These three concepts are related. Going to try to explore the relationship
+(with respect to non-interactive zero knowledge) in this note.
+Simulation-extractability
+High-level: Assume we have some NIZK. An adversary, given access to
+a simulation oracle, produces a proof $\pi$ for a statement $x$. There
+should be an extractor that whenever $\pi$ is true, extracts a valid
+witness for $x$.
+Realized my intuition doesn&rsquo;t specify whether the oracle accepts false
+statements. If it does, then I think this also implies non-malleability?
+Maybe? What even is the def of non-malleability?">  
 
   
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
@@ -46,7 +53,7 @@ Realized my intuition doesn&rsquo;t specify whether the oracle accepts false sta
   
   
   
-  <link rel="stylesheet" href="/css/main.1d622a56371aa18cce9b10ab06e8551ee142434f43b8f12a7d66ba93ba4a8f749224fc78872f8629bdfa04c1fe382bb252622036ac2a3ea35bb844f91c8ec31e.css" integrity="sha512-HWIqVjcaoYzOmxCrBuhVHuFCQ09DuPEqfWa6k7pKj3SSJPx4hy&#43;GKb36BMH&#43;OCuyUmIgNqwqPqNbuET5HI7DHg==" />
+  <link rel="stylesheet" href="/css/main.01273a70fa873b012d056499c16bb47955e0e7526c34edb73f05ca8f99f488ebc323423c6557f93f9b42a41de0448a25ce9a1ab577d0bf61e36eaf52a4979a1d.css" integrity="sha512-ASc6cPqHOwEtBWSZwWu0eVXg51JsNO23PwXKj5n0iOvDI0I8ZVf5P5tCpB3gRIolzpoatXfQv2Hjbq9SpJeaHQ==" />
   
 </head>
 <body a="auto">
@@ -112,8 +119,7 @@ $\mathsf{NIZK.Ext}(\tau, x^*, \pi^*) \rightarrow w^*$.</li>
 $\mathcal{A}$ there is a negligible $\epsilon$ such that
 </p>
 $$\Pr \left[ \mathcal{G}_{\{ {\color{green}\mathsf{strong}},
-{\color{orange}\mathsf{weak}}\}}(1^\lambda, R, \mathcal{A}) = 1 \right] < \epsilon(\lambda).$$
-<h3 id="groth16">Groth16</h3>
+{\color{orange}\mathsf{weak}}\}}(1^\lambda, R, \mathcal{A}) = 1 \right] < \epsilon(\lambda).$$<h3 id="groth16">Groth16</h3>
 <p>Groth16 is ${\color{orange}\mathsf{weak}}$-simulation-extractable. The
 original security proof for Groth16<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> showed that if an adversarial
 prover generates a proof, the elements $(A, B, C)$ of this proof must be
@@ -135,8 +141,7 @@ which the verifier checks:</p>
 $$\newcommand{\ddelta}{{\color{brown}\delta}}
 \newcommand{\ggamma}{{\color{orange}\gamma}}
 \small [A]_1 \cdot [B]_2 = [\alpha]_1 \cdot [\beta]_2 + \sum_{i=0}^\ell a_i
-\Bigl[ \left(\beta u_i(x) + \alpha v_i(x) + w_i(x)\right) \ggamma^{-1}  \Bigr]_1 \cdot [\ggamma]_2 + [C]_1 \cdot [\ddelta]_2 $$
-<p>In view of this, given a proof $([A]_1, [B]_2, [C]_1)$, it is possible to
+\Bigl[ \left(\beta u_i(x) + \alpha v_i(x) + w_i(x)\right) \ggamma^{-1}  \Bigr]_1 \cdot [\ggamma]_2 + [C]_1 \cdot [\ddelta]_2 $$<p>In view of this, given a proof $([A]_1, [B]_2, [C]_1)$, it is possible to
 set $[A']_1 = r[A]_1$, $(r)^{-1}[B']_2 = [B]_2 + s[\delta]_2$, and
 $[C']_1 = [C]_1$. This new proof $([A']_1, [B']_2, [C']_1) \neq ([A]_1,
 [B]_2, [C]_1)$
